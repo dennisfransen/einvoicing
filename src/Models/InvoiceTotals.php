@@ -99,7 +99,7 @@ class InvoiceTotals {
 
         // Process all invoice lines
         foreach ($inv->getLines() as $line) {
-            $lineNetAmount = $inv->round($line->getNetAmount() ?? 0.0, 'line/netAmount');
+            $lineNetAmount = $line->getNetAmount() ?? 0.0;
             $totals->netAmount += $lineNetAmount;
             self::updateVatMap($vatMap, $line, $lineNetAmount);
         }
