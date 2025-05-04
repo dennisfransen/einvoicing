@@ -159,9 +159,9 @@ class InvoiceTotals {
 
     /**
      * Update VAT map
-     * @param array<string,VatBreakdown> &$vatMap VAT map reference
-     * @param VatTrait $item Item instance
-     * @param float $addTaxableAmount Taxable amount to add
+     * @param array<string,VatBreakdown> $vatMap           VAT map reference
+     * @param VatTrait                   $item             Item instance
+     * @param float                      $addTaxableAmount Taxable amount to add
      */
     static private function updateVatMap(array &$vatMap, $item, float $addTaxableAmount) {
         $category = $item->getVatCategory();
