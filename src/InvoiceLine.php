@@ -7,6 +7,7 @@ use Einvoicing\Traits\BuyerAccountingReferenceTrait;
 use Einvoicing\Traits\ClassificationIdentifiersTrait;
 use Einvoicing\Traits\PeriodTrait;
 use Einvoicing\Traits\VatTrait;
+use const PHP_EOL;
 
 class InvoiceLine {
     protected $id = null;
@@ -344,8 +345,10 @@ class InvoiceLine {
         if ($netAmount === null) {
             return null;
         }
+
         $netAmount -= $this->getAllowancesAmount();
         $netAmount += $this->getChargesAmount();
+
         return $netAmount;
     }
 }
