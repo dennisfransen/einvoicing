@@ -183,12 +183,14 @@ class UblWriter extends AbstractWriter {
             $xml->add('cac:PaymentTerms')->add('cbc:Note', $paymentTerms);
         }
 
-        // Allowances and charges
-        foreach ($invoice->getAllowances() as $item) {
-            $this->addAllowanceOrCharge($xml, $item, false, $invoice, $totals, null);
-        }
-        foreach ($invoice->getCharges() as $item) {
-            $this->addAllowanceOrCharge($xml, $item, true, $invoice, $totals, null);
+        if ($invoice->renderAllowanceOrCharge()) {
+            // Allowances and charges
+            foreach ($invoice->getAllowances() as $item) {
+                $this->addAllowanceOrCharge($xml, $item, false, $invoice, $totals, null);
+            }
+            foreach ($invoice->getCharges() as $item) {
+                $this->addAllowanceOrCharge($xml, $item, true, $invoice, $totals, null);
+            }
         }
 
         // Invoice totals
@@ -362,7 +364,7 @@ class UblWriter extends AbstractWriter {
      * @param  Delivery|Party $source Source instance
      * @return UXML                   Postal address node
      */
-    private function addPostalAddressNode(UXML $parent, string $name, $source) {
+    private function addPostalAddressNode(UXML $parent, string $name, $source): UXML {
         $xml = $parent->add($name);
 
         // Street name
@@ -861,7 +863,7 @@ class UblWriter extends AbstractWriter {
         bool $isCreditNoteProfile,
         int &$lastGenId,
         array &$usedIds
-    ) {
+    ): UXML {
         $lineElementName = $isCreditNoteProfile ? "cac:CreditNoteLine" : "cac:InvoiceLine";
         $xml = $parent->add($lineElementName);
 
@@ -910,12 +912,14 @@ class UblWriter extends AbstractWriter {
             $xml->add('cac:OrderLineReference')->add('cbc:LineID', $orderLineReference);
         }
 
-        // Allowances and charges
-        foreach ($line->getAllowances() as $item) {
-            $this->addAllowanceOrCharge($xml, $item, false, $invoice, null, $line);
-        }
-        foreach ($line->getCharges() as $item) {
-            $this->addAllowanceOrCharge($xml, $item, true, $invoice, null, $line);
+        if ($line->renderAllowanceOrCharge()) {
+            // Allowances and charges
+            foreach ($line->getAllowances() as $item) {
+                $this->addAllowanceOrCharge($xml, $item, false, $invoice, null, $line);
+            }
+            foreach ($line->getCharges() as $item) {
+                $this->addAllowanceOrCharge($xml, $item, true, $invoice, null, $line);
+            }
         }
 
         // Initial item node
@@ -977,7 +981,7 @@ class UblWriter extends AbstractWriter {
         $priceNode = $xml->add('cac:Price');
 
         // Price amount
-        $price = $line->getPrice();
+        $price = $line->renderAllowanceOrCharge() ? $line->getPrice() : $line->getPriceWithAllowanceOrCharge();
         if ($price !== null) {
             $this->addAmountNode(
                 $priceNode,
@@ -995,6 +999,7 @@ class UblWriter extends AbstractWriter {
 
         return $xml;
     }
+
 
     /**
      * Add attachment node

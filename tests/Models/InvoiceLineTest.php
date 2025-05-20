@@ -21,8 +21,8 @@ final class InvoiceLineTest extends TestCase {
 
         $this->invoice->addLine($line);
 
-        $this->assertEquals(189.36, $line->getPrice()); // Utan påslag
-        $this->assertEquals(378.72, $line->getNetAmountBeforeAllowancesCharges()); // Utan påslag;
-        $this->assertEquals(409.0176, $line->getNetAmount()); // Med påslag
+        $this->assertEquals(189.36, $line->getPrice());
+        $this->assertEquals(378.72, $line->getNetAmountBeforeAllowancesCharges());
+        $this->assertEquals(409.0176, $line->getNetAmount());
     }
 }

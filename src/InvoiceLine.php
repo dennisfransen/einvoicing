@@ -276,6 +276,29 @@ class InvoiceLine {
 
 
     /**
+     * Get price with allowance or charge
+     * @return float|null PriceWithAllowanceOrCharge
+     */
+    public function getPriceWithAllowanceOrCharge(): ?float {
+        if ($this->price === null) {
+            return null;
+        }
+
+        $chargesAmount = 0;
+        foreach ($this->getCharges() as $item) {
+            $chargesAmount += $item->getEffectiveAmount($this->price);
+        }
+
+        $allowancesAmount = 0;
+        foreach ($this->getAllowances() as $item) {
+            $allowancesAmount += $item->getEffectiveAmount($this->price);
+        }
+
+        return $this->price - $allowancesAmount + $chargesAmount;
+    }
+
+
+    /**
      * Get base quantity
      * @return float Base quantity
      */
