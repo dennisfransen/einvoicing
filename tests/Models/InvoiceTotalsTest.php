@@ -6,7 +6,6 @@ use Einvoicing\Invoice;
 use Einvoicing\InvoiceLine;
 use Einvoicing\Models\InvoiceTotals;
 use PHPUnit\Framework\TestCase;
-use const PHP_EOL;
 
 final class InvoiceTotalsTest extends TestCase {
     /** @var Invoice */

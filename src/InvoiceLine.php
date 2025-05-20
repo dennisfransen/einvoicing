@@ -7,7 +7,6 @@ use Einvoicing\Traits\BuyerAccountingReferenceTrait;
 use Einvoicing\Traits\ClassificationIdentifiersTrait;
 use Einvoicing\Traits\PeriodTrait;
 use Einvoicing\Traits\VatTrait;
-use const PHP_EOL;
 
 class InvoiceLine {
     protected $id = null;
@@ -272,6 +271,29 @@ class InvoiceLine {
             $this->setBaseQuantity($baseQuantity);
         }
         return $this;
+    }
+
+
+    /**
+     * Get price with allowance or charge
+     * @return float|null PriceWithAllowanceOrCharge
+     */
+    public function getPriceWithAllowanceOrCharge(): ?float {
+        if ($this->price === null) {
+            return null;
+        }
+
+        $chargesAmount = 0;
+        foreach ($this->getCharges() as $item) {
+            $chargesAmount += $item->getEffectiveAmount($this->price);
+        }
+
+        $allowancesAmount = 0;
+        foreach ($this->getAllowances() as $item) {
+            $allowancesAmount += $item->getEffectiveAmount($this->price);
+        }
+
+        return $this->price - $allowancesAmount + $chargesAmount;
     }
 
 

@@ -9,6 +9,7 @@ use function count;
 trait AllowanceOrChargeTrait {
     protected $allowances = [];
     protected $charges = [];
+    protected $renderAllowanceOrCharge = true;
 
     /**
      * Get allowances
@@ -96,6 +97,25 @@ trait AllowanceOrChargeTrait {
      */
     public function clearCharges(): self {
         $this->charges = [];
+        return $this;
+    }
+
+
+    /**
+     * Is allowance or charge is being added to the XML-tree?
+     * @return bool
+     */
+    public function renderAllowanceOrCharge(): bool {
+        return $this->renderAllowanceOrCharge;
+    }
+
+
+    /**
+     * Determine if allowance or charge is being added to the XML-tree.
+     * @return self This instance
+     */
+    public function setRenderAllowanceOrCharge(bool $renderAllowanceOrCharge): self {
+        $this->renderAllowanceOrCharge = $renderAllowanceOrCharge;
         return $this;
     }
 }
