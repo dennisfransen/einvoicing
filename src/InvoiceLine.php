@@ -22,6 +22,7 @@ class InvoiceLine {
     protected $unit = "C62"; // TODO: add constants
     protected $price = null;
     protected $baseQuantity = 1;
+    protected $renderAllowanceOrCharge = true;
 
     use AllowanceOrChargeTrait;
     use AttributesTrait;
@@ -270,6 +271,25 @@ class InvoiceLine {
         if ($baseQuantity !== null) {
             $this->setBaseQuantity($baseQuantity);
         }
+        return $this;
+    }
+
+
+    /**
+     * Get renderAllowanceOrCharge
+     * @return bool
+     */
+    public function renderAllowanceOrCharge(): bool {
+        return $this->renderAllowanceOrCharge;
+    }
+
+
+    /**
+     * Determine if allowance or charge is being added to the XML-tree.
+     * @return self This instance
+     */
+    public function setRenderAllowanceOrCharge(bool $renderAllowanceOrCharge): self {
+        $this->renderAllowanceOrCharge = $renderAllowanceOrCharge;
         return $this;
     }
 

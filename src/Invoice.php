@@ -301,24 +301,6 @@ class Invoice {
 
 
     /**
-     * Determine if allowance or charge is being added to the XML-tree.
-     * Set renderAllowanceOrCharge on all InvoiceLine(s) if render-value is false.
-     * @return self This instance
-     */
-    public function setRenderAllowanceOrCharge(bool $renderAllowanceOrCharge): self {
-        $this->renderAllowanceOrCharge = $renderAllowanceOrCharge;
-
-        if (!$renderAllowanceOrCharge) {
-            foreach ($this->lines as $line) {
-                $line->setRenderAllowanceOrCharge(false);
-            }
-        }
-
-        return $this;
-    }
-
-
-    /**
      * Get number of decimal places for a given field
      * @param  string $field Field name
      * @return int           Number of decimal places
@@ -974,14 +956,6 @@ class Invoice {
      * @return self              Invoice instance
      */
     public function addLine(InvoiceLine $line): self {
-        /**
-         * Inherit $renderAllowanceOrCharge value from Invoice, if the value is false.
-         * This is not completely safe, because a user could change the InvoiceLine(s) render-value after the InvoiceLine is added.
-         */
-        if (!$this->renderAllowanceOrCharge) {
-            $line->setRenderAllowanceOrCharge($this->renderAllowanceOrCharge);
-        }
-
         $this->lines[] = $line;
         return $this;
     }

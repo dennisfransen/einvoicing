@@ -15,6 +15,9 @@ use Einvoicing\Payments\Mandate;
 use Einvoicing\Payments\Payment;
 use Einvoicing\Payments\Transfer;
 use UXML\UXML;
+use function array_filter;
+use function array_find;
+use function count;
 use function in_array;
 
 class UblWriter extends AbstractWriter {
@@ -183,7 +186,13 @@ class UblWriter extends AbstractWriter {
             $xml->add('cac:PaymentTerms')->add('cbc:Note', $paymentTerms);
         }
 
-        if ($invoice->renderAllowanceOrCharge()) {
+        $linesDontRenderAllowanceOrCharge = array_map(function (InvoiceLine $line) {
+            return $line->renderAllowanceOrCharge();
+        }, $invoice->getLines());
+
+        $renderAllowanceOrCharge = !in_array(false, $linesDontRenderAllowanceOrCharge, true);
+
+        if ($renderAllowanceOrCharge) {
             // Allowances and charges
             foreach ($invoice->getAllowances() as $item) {
                 $this->addAllowanceOrCharge($xml, $item, false, $invoice, $totals, null);
